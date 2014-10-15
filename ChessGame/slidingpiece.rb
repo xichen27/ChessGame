@@ -2,8 +2,7 @@ require './piece'
 
 class SlidingPiece < Piece
   HORIZONTAL_DIRS = [[1, 0], [0, 1], [-1, 0], [0, -1]]
-  DIAGONAL_DIRS = [1, 1].product([-1, -1])
-  
+  DIAGONAL_DIRS = [-1, 1].product([1, -1])
   def move 
     moves = []
      @move_dirs.each do |dir|
@@ -34,7 +33,7 @@ class Rook < SlidingPiece
   end
   
   def inspect
-    "R"
+    "#{color}R"
   end
   
 end
@@ -47,7 +46,7 @@ class Bishop < SlidingPiece
   end
   
   def inspect
-    "B"
+    "#{color}B"
   end
   
 end
@@ -60,7 +59,7 @@ class Queen < SlidingPiece
   end
   
   def inspect
-    "Q"
+    "#{color}Q"
   end
   
 end

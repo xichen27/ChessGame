@@ -7,8 +7,12 @@ class SteppingPiece < Piece
     steps.each do |step|
       y = self.pos[0] + step[0]
       x = self.pos[1] + step[1]
-      moves << [y, x]
+      
+      if @board.in_range?(y) && @board.in_range?(x)
+        moves << [y,x] if !@board.is_enemy?([y,x], color) && @board.is_blank?([y,x])
+      end
     end
+    
     moves
   end
 end
@@ -20,7 +24,7 @@ class King < SteppingPiece
     [1, 1],
     [0, -1],
     [0, 1],
-    [-1, -1],
+    [-1, 1],
     [-1, 0],
     [-1, -1]
   ]
@@ -29,7 +33,7 @@ class King < SteppingPiece
   end    
   
   def inspect
-    "K"
+    "#{color}K"
   end       
 end
 
@@ -50,6 +54,6 @@ class Knight < SteppingPiece
    end    
    
    def inspect
-     "H"
+     "#{color}H"
    end       
  end

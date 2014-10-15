@@ -16,7 +16,16 @@ class Piece
     "Whatever"
   end
   
+  def move_into_check?(check_pos)
+    test_board = @board.deep_dup 
+    test_board.move!(@pos, check_pos)
+    test_board.in_check?(@color)
+  end
   
+  def valid_moves
+    #puts "here are the moves"
+    move.select{ |m| !move_into_check?(m) }
+  end
 
 end
 
@@ -31,7 +40,7 @@ class BlankPiece < Piece
   end
   
   def inspect
-    "_"
+    "__"
   end
   
 end
@@ -40,16 +49,30 @@ class Pawn < Piece
 
   def move
     moves = []
+    #moves << [@pos[0] - 1, @pos[1] ] if @board.is_blank?([@pos[0] - 1, @pos[1]])
     if self.color == "w"
-      moves << [@pos[0] + 1, @pos[1]]
-    else
-      moves << [@pos[0] - 1, @pos[1]]
-    end 
-    moves
+      moves << [@pos[0] + 1, @pos[1] ] if @board.is_blank?([@pos[0] + 1, @pos[1]])
+    elsif self.color == "b"
+      moves << [@pos[0] - 1, @pos[1] ] if @board.is_blank?([@pos[0] - 1, @pos[1]])
+    end
+    moves+capture
   end
   
+  def capture
+    moves = []
+    if @color == "w"
+       moves << [@pos[0] + 1, @pos[1]- 1 ] if @board.is_enemy?([@pos[0] + 1, @pos[1]- 1 ], @color)
+       moves << [@pos[0] + 1, @pos[1] + 1 ] if @board.is_enemy?([@pos[0] + 1, @pos[1] + 1 ], @color)
+    else 
+      moves << [@pos[0] - 1, @pos[1] - 1 ] if @board.is_enemy?([@pos[0] - 1, @pos[1] - 1 ], @color)
+      moves << [@pos[0] - 1, @pos[1] + 1 ] if @board.is_enemy?([@pos[0] - 1, @pos[1] + 1 ], @color)
+    end
+    moves
+  end
+    
+  
   def inspect
-    "P"
+    "#{color}P"
   end
 
 end
