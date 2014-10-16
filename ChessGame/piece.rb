@@ -1,3 +1,5 @@
+#require 'debugger'
+
 class Piece
   attr_reader :pos, :p, :color
   attr_writer :pos, :board
@@ -24,6 +26,7 @@ class Piece
   
   def valid_moves
     #puts "here are the moves"
+
     move.select{ |m| !move_into_check?(m) }
   end
 
@@ -46,28 +49,27 @@ class BlankPiece < Piece
 end
 
 class Pawn < Piece 
-
+  
   def move
+    vert_hash = {"w" => [1, 0], "b" => [-1, 0]}
     moves = []
-    #moves << [@pos[0] - 1, @pos[1] ] if @board.is_blank?([@pos[0] - 1, @pos[1]])
-    if self.color == "w"
-      moves << [@pos[0] + 1, @pos[1] ] if @board.is_blank?([@pos[0] + 1, @pos[1]])
-    elsif self.color == "b"
-      moves << [@pos[0] - 1, @pos[1] ] if @board.is_blank?([@pos[0] - 1, @pos[1]])
-    end
-    moves+capture
+    
+    vert = [@pos[0] + vert_hash[@color][0] , @pos[1] + vert_hash[@color][1]]
+    moves << vert if @board.is_blank?(vert)
+    
+    moves + capture
   end
   
   def capture
-    moves = []
-    if @color == "w"
-       moves << [@pos[0] + 1, @pos[1]- 1 ] if @board.is_enemy?([@pos[0] + 1, @pos[1]- 1 ], @color)
-       moves << [@pos[0] + 1, @pos[1] + 1 ] if @board.is_enemy?([@pos[0] + 1, @pos[1] + 1 ], @color)
-    else 
-      moves << [@pos[0] - 1, @pos[1] - 1 ] if @board.is_enemy?([@pos[0] - 1, @pos[1] - 1 ], @color)
-      moves << [@pos[0] - 1, @pos[1] + 1 ] if @board.is_enemy?([@pos[0] - 1, @pos[1] + 1 ], @color)
+    diag_hash = {"w" => [[1, -1], [1, 1]], "b" => [[-1, -1], [-1, 1]]}
+    diag_moves = []
+    
+    diag_hash[@color].each do |delta|
+      diag_pos = [@pos[0] + delta[0], @pos[1] + delta[1] ]
+      diag_moves << diag_pos if @board.is_enemy?(diag_pos, @color)
+      #debugger
     end
-    moves
+    diag_moves
   end
     
   

@@ -49,7 +49,7 @@ class Board
     end
     
     # #testing stuffs
-    #@board[5][2] = Queen.new(self, [3,2], "w")
+    @board[5][2] = Queen.new(self, [5,2], "w")
 #     @board[5][0] = Queen.new(self, [5,0], "b")
 #     @board[5][2] = King.new(self, [5,2], "w")
   end
@@ -67,12 +67,15 @@ class Board
   end
   
   def is_enemy?(pos,col)
-    return false if @board[pos[0]][pos[1]].color == col || @board[pos[0]][pos[1]].color == '_'
+    return false if @board[pos[0]][pos[1]].nil? || @board[pos[0]][pos[1]].color == col ||
+    @board[pos[0]][pos[1]].color == '_'
+    
     true
   end
   
-  def in_range?(x)
-     x.between?(0, 7)
+  def in_range?(array)
+    y, x = array
+    y.between?(0, 7) && x.between?(0, 7)
   end
   
   def find_king_position(col)
@@ -98,9 +101,11 @@ class Board
   def in_check?(col)
     enemies = assemble_enemies(col)
     king_pos = find_king_position(col)
+   
     
     #check if enemies moves includes king's position
     enemies.each do |enemy|
+       # debugger
       return true if enemy.move.include?(king_pos)
     end
     false
@@ -137,9 +142,6 @@ class Board
     dup.board.each do |row|
       row.each do |piece|
         y, x = piece.pos
-        # dup.board[y][x] = self.board[y][x].dup
-#         dup.board[y][x].board = dup
-#         dup.board[y][x].pos = self.board[y][x].pos.dup
         dup.board[y][x] = self.board[y][x].class.new(dup, piece.pos, piece.color )
       end
     end
@@ -171,5 +173,4 @@ end
 
 b = Board.new
 b.display
-p b.board[6][1].move
-
+p b.board[6][7].valid_moves

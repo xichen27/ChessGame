@@ -9,14 +9,16 @@ class SlidingPiece < Piece
        i = 1 # TA: iterate!
        y = pos[0]
        x = pos[1]
-       until !@board.in_range?(x + dir[1]*i)|| !@board.in_range?(y + dir[0]*i)
-         if @board.is_enemy?([y + dir[0]*i, x + dir[1]*i] , color )
-           moves << [y + dir[0]*i, x + dir[1]*i]
+       
+       until !@board.in_range?([x + dir[1]*i, y + dir[0]*i])
+         dy, dx = x + dir[1]*i, y + dir[0]*i
+         if @board.is_enemy?([dy, dx] , @color )
+           moves << [dy, dx]
            break
-         elsif !@board.is_blank?([y + dir[0]*i, x + dir[1]*i])
+         elsif !@board.is_blank?([dy, dx])
            break
          end
-         moves << [y + dir[0]*i, x + dir[1]*i]
+         moves << [dy, dx]
          i += 1 
        end
      end

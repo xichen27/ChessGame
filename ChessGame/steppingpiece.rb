@@ -8,11 +8,10 @@ class SteppingPiece < Piece
       y = self.pos[0] + step[0]
       x = self.pos[1] + step[1]
       
-      if @board.in_range?(y) && @board.in_range?(x)
-        moves << [y,x] if !@board.is_enemy?([y,x], color) && @board.is_blank?([y,x])
+      if @board.in_range?([y, x])
+        moves << [y,x] if !@board.is_enemy?([y,x], @color) && @board.is_blank?([y,x])
       end
     end
-    
     moves
   end
 end
@@ -54,6 +53,6 @@ class Knight < SteppingPiece
    end    
    
    def inspect
-     "#{color}H"
+     "#{@color}H"
    end       
  end
